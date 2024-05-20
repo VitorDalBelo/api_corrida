@@ -1,0 +1,30 @@
+version: '3.9'
+
+networks:
+  corrida-network:
+    name: corrida-network
+    driver: bridge
+
+volumes:
+  pgVolume:
+    name: corridaDB
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    ports:
+      - 5498:5432
+    networks:
+      - corrida-network
+    volumes:
+      - "$PWD/my-postgres.conf:/etc/postgresql/postgresql.conf"
+      - pgVolume:/var/lib/postgresql/data
+    command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
+    environment:
+      POSTGRES_PASSWORD: 1010
+      POSTGRES_DB: testeDB
+      POSTGRES_USER: postgres
+      POSTGRES_HOST_AUTH_METHOD: md5
